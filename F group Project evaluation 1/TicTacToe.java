@@ -2,10 +2,14 @@ package tic_tac_toe;
 
 import java.util.Random;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TicTacToe {
-
+	
+    static ArrayList<Integer> playerposition=new ArrayList<Integer>();
+    static ArrayList<Integer> cpuposition=new ArrayList<Integer>(); 
 	public static void main(String[] args) 
 	{
 		char [][] gameboard= {{' ' ,'|' ,' ','|',' '},
@@ -21,18 +25,42 @@ public class TicTacToe {
 			//Scanner s=new Scanner(System.in);	
 			System.out.println("Enter Placement(1-9):");
 			int playerpos=s.nextInt();
-			
+			while(playerposition.contains(playerpos)|| cpuposition.contains(playerposition))
+			{
+				System.out.println("Positionn occupied Enter another");
+				playerpos=s.nextInt();
+			}
 			//System.out.println(playerpos);
 			
 			placeput(gameboard,playerpos,"player");
-			
+			String result =findwinner();
+			if(result.length()>0)
+			{
+				System.out.println(result);
+				System.out.println();
+				printGameBoard(gameboard);
+				break;
+			}
+
 			Random r=new Random();
-			
 			int cpupos=r.nextInt(9)+1;
-			
+			while(playerposition.contains(cpupos)|| cpuposition.contains(cpupos))
+			{
+				System.out.println("Positionn occupied Enter another");
+				cpupos=s.nextInt();
+			}
+		
 			placeput(gameboard,cpupos,"cpu");
-			
 			printGameBoard(gameboard);
+			result=findwinner();
+			if(result.length()>0)
+			{
+				System.out.println(result);
+				System.out.println();
+				printGameBoard(gameboard);
+				break;
+			}
+			
 		}
 		
 	}
@@ -53,10 +81,12 @@ public static void  placeput(char[][] gameboard,int pos,String user)
 	if(user.equals("player"))
 	{
 	  symbol='X';
+	  playerposition.add(pos);
 	}
 	else if(user.contentEquals("cpu"))
 	{
 	  symbol='O';
+	  cpuposition.add(pos);
 	}
 	switch(pos)
 	{
@@ -93,14 +123,14 @@ public static void  placeput(char[][] gameboard,int pos,String user)
 }
 public static String findwinner()
 {
-	List toprow=Arrays.asList(1,2,3);
-	List midrow=Arrays.asList(4,5,6);
-	List botrow=Arrays.asList(7,8,9);
-	List leftcol=Arrays.asList(1,4,7);
-	List midcol=Arrays.asList(2,5,8);
-	List rightcol=Arrays.asList(3,6,9);
-	List cross1=Arrays.asList(1,5,9);
-	List cross2=Arrays.asList(7,5,3);
+	List<Integer> toprow=Arrays.asList(1,2,3);
+	List<Integer> midrow=Arrays.asList(4,5,6);
+	List <Integer>botrow=Arrays.asList(7,8,9);
+	List <Integer>leftcol=Arrays.asList(1,4,7);
+	List <Integer>midcol=Arrays.asList(2,5,8);
+	List <Integer>rightcol=Arrays.asList(3,6,9);
+	List <Integer>cross1=Arrays.asList(1,5,9);
+	List <Integer>cross2=Arrays.asList(7,5,3);
 
 	List<List> winning=new ArrayList<List>();
 	winning.add(toprow);
@@ -112,31 +142,22 @@ public static String findwinner()
 	winning.add(cross1);
 	winning.add(cross2);
 	
+	for(List l: winning)
+	{
+		if(playerposition.containsAll(l))
+		{
+			return "Yehhh you WON";
+		}
+		else if(cpuposition.containsAll(l)) 
+		{
+			return "CPU wins!"; 
+		}
+		else if(playerposition.size()+cpuposition.size()==9)
+		{
+			return "TIE";
+		}
+	}
 	return"";
 }
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
